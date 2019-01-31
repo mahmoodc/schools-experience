@@ -1,4 +1,4 @@
-# DfE School Experience
+# DfE School Experience 
 
 [![Build Status](https://dfe-ssp.visualstudio.com/School-Experience/_apis/build/status/School-Experience-CI?branchName=master)](https://dfe-ssp.visualstudio.com/School-Experience/_build/latest?definitionId=33&branchName=master)
 
