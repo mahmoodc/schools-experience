@@ -31,7 +31,11 @@ steps:
     displayName: Create Testing databases, import schema and fixtures
   - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rspec
     displayName: Run the Specs
-  - bash: docker run --rm --link postgres:postgres -e DATABASE_URL=$DATABASE_URL -e RAILS_ENV=test -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -v $(pwd):/app $DOCKERREGISTRY/$IMAGENAME:$IMAGETAG cucumber --format html --out cucumber.html
+  - bash: |
+      echo $DOCKERREGISTRY
+      echo $IMAGENAME
+      echo $IMAGETAG
+      docker run --rm --link postgres:postgres -e DATABASE_URL=$DATABASE_URL -e RAILS_ENV=test -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true $DOCKERREGISTRY/$IMAGENAME:$IMAGETAG cucumber --format html --out cucumber.html
     displayName: Run the Cucumber features
   - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) brakeman --no-pager
     displayName: Run the Brakeman security scan
