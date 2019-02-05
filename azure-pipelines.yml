@@ -60,7 +60,7 @@ steps:
       tagSource: 'manual'
       tag: v$(Build.BuildId)
       isPreRelease: true
-      isDraft: true
+      isDraft: false
       addChangeLog: false
     displayName: 'Create GitHub Release'
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/feature/create-release-on-success')
