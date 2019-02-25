@@ -3,7 +3,6 @@ class NotifyEmail::SchoolRequestConfirmation < Notify
     :candidate_dbs_check_document,
     :candidate_degree_stage,
     :candidate_degree_subject,
-    :candidate_disability_needs,
     :candidate_email_address,
     :candidate_name,
     :candidate_phone_number,
@@ -22,7 +21,6 @@ class NotifyEmail::SchoolRequestConfirmation < Notify
     candidate_dbs_check_document:,
     candidate_degree_stage:,
     candidate_degree_subject:,
-    candidate_disability_needs:,
     candidate_email_address:,
     candidate_name:,
     candidate_phone_number:,
@@ -40,7 +38,6 @@ class NotifyEmail::SchoolRequestConfirmation < Notify
     self.candidate_dbs_check_document             =        candidate_dbs_check_document
     self.candidate_degree_stage                   =        candidate_degree_stage
     self.candidate_degree_subject                 =        candidate_degree_subject
-    self.candidate_disability_needs               =        candidate_disability_needs
     self.candidate_email_address                  =        candidate_email_address
     self.candidate_name                           =        candidate_name
     self.candidate_phone_number                   =        candidate_phone_number
@@ -88,7 +85,6 @@ private
       candidate_dbs_check_document: candidate_dbs_check_document,
       candidate_degree_stage: candidate_degree_stage,
       candidate_degree_subject: candidate_degree_subject,
-      candidate_disability_needs: candidate_disability_needs,
       candidate_email_address: candidate_email_address,
       candidate_name: candidate_name,
       candidate_phone_number: candidate_phone_number,
