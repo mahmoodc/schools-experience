@@ -62,7 +62,6 @@ class NotifyEmail::SchoolRequestConfirmation < Notify
       candidate_address: application_preview.full_address,
       candidate_dbs_check_document: application_preview.dbs_check_document, candidate_degree_stage: application_preview.degree_stage,
       candidate_degree_subject: application_preview.degree_subject,
-      candidate_disability_needs: application_preview.access_needs,
       candidate_email_address: application_preview.email_address,
       candidate_name: application_preview.full_name,
       candidate_phone_number: application_preview.telephone_number,

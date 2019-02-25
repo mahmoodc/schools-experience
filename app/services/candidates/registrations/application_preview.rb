@@ -56,14 +56,6 @@ module Candidates
         placement_preference.objectives
       end
 
-      def access_needs
-        if placement_preference.access_needs
-          placement_preference.access_needs_details
-        else
-          'None'
-        end
-      end
-
       def degree_stage
         subject_preference.degree_stage
       end
