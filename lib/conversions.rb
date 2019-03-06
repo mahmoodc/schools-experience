@@ -7,5 +7,12 @@ module Conversions
         end
       end
     end
+    module Metres
+      module ToMiles
+        def self.convert(metres)
+          metres * 0.0006213
+        end
+      end
+    end
   end
 end
