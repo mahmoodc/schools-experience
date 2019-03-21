@@ -55,6 +55,7 @@ steps:
       docker push $(dockerRegistry)/$(imageName):latest
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     displayName: 'Push Docker image'
+  - script: git tag -a v$(imageTag) -m "sucessfully built and tested in CI"
   - task: CopyFiles@2
     inputs:
       contents: 'script/compose-school-experience.sh'
