@@ -108,7 +108,10 @@ Capybara.register_driver :firefox_headless do |app|
 end
 
 Capybara.register_driver :ie do |app|
-  Capybara::Selenium::Driver.new(app, browser: :internet_explorer)
+  profile = Selenium::WebDriver::InternetExplorer::Profile.new
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.timeout = 240 # instead of the default 60
+  Capybara::Selenium::Driver.new(app, browser: :internet_explorer, profile: profile, http_client: client)
 end
 
 if (driver = ENV['CUC_DRIVER']) && driver.present?
