@@ -110,7 +110,7 @@ end
 Capybara.register_driver :ie do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
   client.read_timeout = 240 # seconds
-  Capybara::Selenium::Driver.new(app, browser: :internet_explorer, profile: profile, http_client: client)
+  Capybara::Selenium::Driver.new(app, browser: :internet_explorer, http_client: client)
 end
 
 if (driver = ENV['CUC_DRIVER']) && driver.present?
