@@ -108,9 +108,8 @@ Capybara.register_driver :firefox_headless do |app|
 end
 
 Capybara.register_driver :ie do |app|
-  profile = Selenium::WebDriver::InternetExplorer::Profile.new
   client = Selenium::WebDriver::Remote::Http::Default.new
-  client.timeout = 240 # instead of the default 60
+  client.read_timeout = 240 # seconds
   Capybara::Selenium::Driver.new(app, browser: :internet_explorer, profile: profile, http_client: client)
 end
 
