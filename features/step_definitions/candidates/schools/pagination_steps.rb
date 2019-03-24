@@ -26,6 +26,7 @@ end
 When("I navigate to the second page of results") do
   within('.pagination-info.higher > nav.pagination') do
     click_link '2'
+    sleep(5)
   end
 end
 
