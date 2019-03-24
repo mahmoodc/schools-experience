@@ -108,9 +108,10 @@ Capybara.register_driver :firefox_headless do |app|
 end
 
 Capybara.register_driver :ie do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 240 # seconds
-  Capybara::Selenium::Driver.new(app, browser: :internet_explorer, http_client: client)
+  options = Selenium::WebDriver::IE::Options.new
+  options.require_window_focus = true
+  oprtions.ignore_protected_mode_settings = true
+  Capybara::Selenium::Driver.new(app, browser: :internet_explorer, options: options)
 end
 
 if (driver = ENV['CUC_DRIVER']) && driver.present?
