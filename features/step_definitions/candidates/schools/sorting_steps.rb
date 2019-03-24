@@ -22,6 +22,7 @@ end
 Given("I have provided {string} as my location") do |location|
   path = candidates_schools_path(location: location, distance: 25)
   visit(path)
+  sleep(5)
   path_with_query = [page.current_path, URI.parse(page.current_url).query].join("?")
   expect(path_with_query).to eql(path)
 end
@@ -39,6 +40,7 @@ Given("I have provided a point in {string} as my location") do |centre|
 
   path = candidates_schools_path(latitude: point["latitude"], longitude: point["longitude"], distance: 25)
   visit(path)
+  sleep(5)
   path_with_query = [page.current_path, URI.parse(page.current_url).query].join("?")
   expect(path_with_query).to eql(path)
 end
