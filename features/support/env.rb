@@ -110,7 +110,7 @@ end
 Capybara.register_driver :ie do |app|
   options = Selenium::WebDriver::IE::Options.new
   options.require_window_focus = true
-  oprtions.ignore_protected_mode_settings = true
+  options.ignore_protected_mode_settings = true
   Capybara::Selenium::Driver.new(app, browser: :internet_explorer, options: options)
 end
 
