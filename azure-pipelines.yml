@@ -70,3 +70,13 @@ steps:
       pathtoPublish: $(Build.ArtifactStagingDirectory)/script/compose-school-experience.sh
       artifactName: 'compose-file'
     displayName: 'Publish the Docker Compose file'
+  - task: CopyFiles@2
+    inputs:
+      contents: 'jmeter/schoolexperience.jmx'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+    displayName: 'Copy jmeter jmx file to staging area'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)/jmeter/schoolexperience.jmx
+      artifactName: 'jmeter'
+    displayName: 'Publish the jmeter jmx file'
