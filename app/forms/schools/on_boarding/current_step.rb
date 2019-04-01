@@ -22,7 +22,8 @@ module Schools
         elsif other_fees_required?
           :other_fee
         else
-          :phase
+          puts 'Update my spec!!'
+          :phases_list
         end
       end
 

@@ -82,7 +82,7 @@ describe Schools::OnBoarding::CurrentStep do
               end
 
               it 'returns :phase' do
-                expect(returned_step).to eq :phase
+                expect(returned_step).to eq :phases_list
               end
             end
           end

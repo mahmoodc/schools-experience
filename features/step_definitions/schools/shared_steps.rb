@@ -30,10 +30,21 @@ Given "I have completes the Fees step, choosing only DBS costs" do
   )
 end
 
-Given("I have completes the Fees step, choosing only Other costs") do
+Given "I have completes the Fees step, choosing only Other costs" do
   steps %Q(
     Given I am on the 'fees charged' page
     And I check 'Other costs'
+    When I submit the form
+  )
+end
+
+Given "I have completed the Other costs step" do
+  steps %Q(
+    Given I have entered the following details into the form:
+      | Enter the number of pounds.  | 300              |
+      | Explain what the fee covers. | Falconry lessons |
+      | Explain how the fee is paid. | Gold sovereigns  |
+    And I choose 'Daily' from the 'Is this a daily or one-off fee?' radio buttons
     When I submit the form
   )
 end
