@@ -59,11 +59,62 @@ describe Schools::SchoolProfile, type: :model do
           is_expected.to have_db_column(:"#{fee}_payment_method").of_type :text
         end
       end
+
+      it do
+        is_expected.to have_db_column(:phases_list_primary).of_type :boolean
+      end
+
+      it do
+        is_expected.to have_db_column(:phases_list_secondary).of_type :boolean
+      end
+
+      it do
+        is_expected.to have_db_column(:phases_list_college).of_type :boolean
+      end
     end
 
     context 'validations' do
       it do
         is_expected.to validate_presence_of :urn
+      end
+    end
+
+    context 'associations' do
+      context 'subjects' do
+        subject { described_class.create! urn: 1234567890 }
+
+        let! :secondary_phase do
+          FactoryBot.create :bookings_phase, :secondary
+        end
+
+        let! :college_phase do
+          FactoryBot.create :bookings_phase, :college
+        end
+
+        let :secondary_subject do
+          FactoryBot.create :bookings_subject
+        end
+
+        let :college_subject do
+          FactoryBot.create :bookings_subject
+        end
+
+        before do
+          subject.secondary_subjects << secondary_subject
+          subject.college_subjects << college_subject
+        end
+
+        context '#secondary_subjects' do
+          it 'only returns secondary subjects' do
+            expect(subject.secondary_subjects.to_a).to eq [secondary_subject]
+          end
+        end
+
+        context '#college_subjects' do
+          it 'only returns college subjects' do
+            expect(subject.college_subjects.to_a).to eq [college_subject]
+          end
+        end
       end
     end
 
@@ -168,6 +219,54 @@ describe Schools::SchoolProfile, type: :model do
               expect(model.public_send(fee)).to eq form_model
             end
           end
+        end
+      end
+
+      context '#phases_list' do
+        let :form_model do
+          FactoryBot.build :phases_list
+        end
+
+        before do
+          model.phases_list = form_model
+        end
+
+        it 'sets phases_list_primary' do
+          expect(model.phases_list_primary).to eq form_model.primary
+        end
+
+        it 'sets phases_list_secondary' do
+          expect(model.phases_list_secondary).to eq form_model.secondary
+        end
+
+        it 'sets phases_list_college' do
+          expect(model.phases_list_college).to eq form_model.college
+        end
+
+        it 'returns the form model' do
+          expect(model.phases_list).to eq form_model
+        end
+      end
+
+      context '#key_stage_list' do
+        let :form_model do
+          FactoryBot.build :key_stage_list
+        end
+
+        before do
+          model.key_stage_list = form_model
+        end
+
+        it 'sets early_years' do
+          expect(model.key_stage_list.early_years).to eq form_model.early_years
+        end
+
+        it 'sets key_stage_1' do
+          expect(model.key_stage_list.key_stage_1).to eq form_model.key_stage_1
+        end
+
+        it 'sets key_stage_2' do
+          expect(model.key_stage_list.key_stage_2).to eq form_model.key_stage_2
         end
       end
     end

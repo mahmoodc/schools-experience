@@ -17,7 +17,11 @@ Rails.application.routes.draw do
         resource :administration_fee, only: %i(new create)
         resource :dbs_fee, only: %i(new create)
         resource :other_fee, only: %i(new create)
-        resource :phase, only: %i(new)
+        resource :phases_list, only: %i(new create)
+        resource :key_stage_list, only: %i(new create)
+        resource :secondary_subjects, only: %i(new create)
+        resource :college_subjects, only: %i(new create)
+        resource :specialisms, only: %i(new)
       end
     end
   end

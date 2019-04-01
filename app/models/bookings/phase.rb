@@ -1,7 +1,8 @@
 class Bookings::Phase < ApplicationRecord
   validates :name,
     presence: true,
-    length: { minimum: 2, maximum: 32 }
+    length: { minimum: 2, maximum: 32 },
+    uniqueness: true
 
   has_many :bookings_schools_phases,
     class_name: "Bookings::SchoolsPhase",
@@ -15,4 +16,12 @@ class Bookings::Phase < ApplicationRecord
 
   acts_as_list
   default_scope -> { order(:position) }
+
+  def self.secondary
+    find_by! name: 'Secondary'.freeze
+  end
+
+  def self.college
+    find_by! name: '16 plus'.freeze
+  end
 end

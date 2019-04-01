@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe Schools::OnBoarding::CurrentStep do
+  let! :secondary_phase do
+    FactoryBot.create :bookings_phase, :secondary
+  end
+
+  let! :college_phase do
+    FactoryBot.create :bookings_phase, :college
+  end
+
   context '.for' do
     let :returned_step do
       described_class.for school_profile
@@ -73,16 +81,75 @@ describe Schools::OnBoarding::CurrentStep do
             end
 
             context 'other_fees not required' do
-              let :school_profile do
-                FactoryBot.build_stubbed :school_profile,
-                  :with_candidate_requirement,
-                  fees_administration_fees: false,
-                  fees_dbs_fees: false,
-                  fees_other_fees: false
+              context 'phases_list required' do
+                let :school_profile do
+                  FactoryBot.build_stubbed :school_profile,
+                    :with_candidate_requirement,
+                    fees_administration_fees: false,
+                    fees_dbs_fees: false,
+                    fees_other_fees: false
+                end
+
+                it 'returns :phases_list' do
+                  expect(returned_step).to eq :phases_list
+                end
               end
 
-              it 'returns :phase' do
-                expect(returned_step).to eq :phase
+              context 'phases_list not required' do
+                context 'key_stage_list required' do
+                  let :school_profile do
+                    FactoryBot.build_stubbed :school_profile,
+                      :with_candidate_requirement,
+                      :with_fees,
+                      :with_administration_fee,
+                      :with_dbs_fee,
+                      :with_other_fee,
+                      :with_phases
+                  end
+
+                  it 'returns :key_stage_list' do
+                    expect(returned_step).to eq :key_stage_list
+                  end
+                end
+
+                context 'key_stage_list not required' do
+                  context 'secondary_subjects required' do
+                    let :school_profile do
+                      FactoryBot.build_stubbed :school_profile,
+                        :with_candidate_requirement,
+                        :with_fees,
+                        :with_administration_fee,
+                        :with_dbs_fee,
+                        :with_other_fee,
+                        :with_phases,
+                        :with_key_stage_list
+                    end
+
+                    it 'returns secondary_subjects' do
+                      expect(returned_step).to eq :secondary_subjects
+                    end
+                  end
+
+                  context 'secondary_subjects not required' do
+                    context 'college_subjects required' do
+                      let :school_profile do
+                        FactoryBot.create :school_profile,
+                          :with_candidate_requirement,
+                          :with_fees,
+                          :with_administration_fee,
+                          :with_dbs_fee,
+                          :with_other_fee,
+                          :with_phases,
+                          :with_key_stage_list,
+                          :with_secondary_subjects
+                      end
+
+                      it 'returns college_subjects' do
+                        expect(returned_step).to eq :college_subjects
+                      end
+                    end
+                  end
+                end
               end
             end
           end
