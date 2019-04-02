@@ -105,6 +105,10 @@ en:
           <<: *schools_on_boarding_school_fee_errors
         schools/on_boarding/other_fee:
           <<: *schools_on_boarding_school_fee_errors
+        schools/on_boarding/phases_list:
+          attributes:
+            base:
+              no_phase_offered: 'Select at least one phase'
 
   activerecord:
     errors:
