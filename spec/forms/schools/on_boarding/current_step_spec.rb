@@ -73,16 +73,21 @@ describe Schools::OnBoarding::CurrentStep do
             end
 
             context 'other_fees not required' do
-              let :school_profile do
-                FactoryBot.build_stubbed :school_profile,
-                  :with_candidate_requirement,
-                  fees_administration_fees: false,
-                  fees_dbs_fees: false,
-                  fees_other_fees: false
+              context 'phases_list required' do
+                let :school_profile do
+                  FactoryBot.build_stubbed :school_profile,
+                    :with_candidate_requirement,
+                    fees_administration_fees: false,
+                    fees_dbs_fees: false,
+                    fees_other_fees: false
+                end
+
+                it 'returns :phase' do
+                  expect(returned_step).to eq :phases_list
+                end
               end
 
-              it 'returns :phase' do
-                expect(returned_step).to eq :phases_list
+              context 'phases_list not required' do
               end
             end
           end
