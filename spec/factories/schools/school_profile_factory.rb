@@ -35,5 +35,11 @@ FactoryBot.define do
       other_fee_interval { 'One-off' }
       other_fee_payment_method { 'Stamps' }
     end
+
+    trait :with_phases do
+      phases_list_primary { true }
+      phases_list_secondary { true }
+      phases_list_college { true }
+    end
   end
 end
