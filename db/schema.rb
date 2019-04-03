@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_162830) do
+ActiveRecord::Schema.define(version: 2019_04_03_132018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,9 @@ ActiveRecord::Schema.define(version: 2019_04_01_162830) do
     t.boolean "phases_list_primary", default: false, null: false
     t.boolean "phases_list_secondary", default: false, null: false
     t.boolean "phases_list_college", default: false, null: false
+    t.boolean "key_stage_list_early_years", default: false
+    t.boolean "key_stage_list_key_stage_1", default: false
+    t.boolean "key_stage_list_key_stage_2", default: false
     t.index ["urn"], name: "index_schools_school_profiles_on_urn"
   end
 

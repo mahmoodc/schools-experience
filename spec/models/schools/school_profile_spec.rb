@@ -208,6 +208,28 @@ describe Schools::SchoolProfile, type: :model do
           expect(model.phases_list).to eq form_model
         end
       end
+
+      context '#key_stage_list' do
+        let :form_model do
+          FactoryBot.build :key_stage_list
+        end
+
+        before do
+          model.key_stage_list = form_model
+        end
+
+        it 'sets early_years' do
+          expect(model.key_stage_list.early_years).to eq form_model.early_years
+        end
+
+        it 'sets key_stage_1' do
+          expect(model.key_stage_list.key_stage_1).to eq form_model.key_stage_1
+        end
+
+        it 'sets key_stage_2' do
+          expect(model.key_stage_list.key_stage_2).to eq form_model.key_stage_2
+        end
+      end
     end
   end
 end

@@ -9,9 +9,16 @@
 
     <%= form_for @phases_list, url: schools_on_boarding_phases_list_path do |f| %>
       <%= GovukElementsErrorsHelper.error_summary @phases_list, 'There is a problem', '' %>
-      <%= f.check_box_input :primary %>
-      <%= f.check_box_input :secondary %>
-      <%= f.check_box_input :college %>
+      <div class="govuk-form-group">
+        <div class="govuk-fieldset">
+          <div class="govuk-checkboxes">
+            <%= f.check_box_input :primary %>
+            <%= f.check_box_input :secondary %>
+            <%= f.check_box_input :college %>
+          </div>
+        </div>
+      </div>
+
       <%= f.submit 'Continue' %>
     <% end %>
   </div>

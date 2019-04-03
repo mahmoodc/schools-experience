@@ -59,7 +59,7 @@ describe Schools::OnBoarding::PhasesListsController, type: :request do
 
       it 'redirects to the next step' do
         expect(response).to redirect_to \
-          new_schools_on_boarding_primary_key_stages_path
+          new_schools_on_boarding_key_stage_list_path
       end
     end
   end

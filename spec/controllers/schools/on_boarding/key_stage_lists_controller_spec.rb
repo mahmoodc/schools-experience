@@ -32,6 +32,10 @@ describe Schools::OnBoarding::KeyStageListsController, type: :request do
       { schools_on_boarding_key_stage_list: key_stage_list.attributes }
     end
 
+    before do
+      post '/schools/on_boarding/key_stage_list/', params: params
+    end
+
     context 'invalid' do
       let :key_stage_list do
         Schools::OnBoarding::KeyStageList.new

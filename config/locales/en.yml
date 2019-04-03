@@ -109,6 +109,11 @@ en:
           attributes:
             base:
               no_phase_offered: 'Select at least one phase'
+        schools/on_boarding/key_stage_list:
+          attributes:
+            base:
+              no_key_stage_offered: 'Select at least one key stage'
+
 
   activerecord:
     errors:
@@ -201,6 +206,8 @@ en:
         <<: *schools_on_boarding_school_fee_labels
       schools_on_boarding_other_fee:
         <<: *schools_on_boarding_school_fee_labels
+      schools_on_boarding_phases_list:
+        college: '16 to 18 years'
 
     page_entries_info:
       one_page:
