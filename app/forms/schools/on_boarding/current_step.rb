@@ -23,6 +23,8 @@ module Schools
           :other_fee
         elsif phases_list_required?
           :phases_list
+        elsif primary_key_stages_required?
+          :primary_key_stages
         else
           raise 'Wizard incomplete' # NOTE: temp until wizard is finished
         end
@@ -53,6 +55,10 @@ module Schools
 
       def phases_list_required?
         !@school_profile.phases_list.dup.valid?
+      end
+
+      def primary_key_stages_required?
+        @school_profile.phases_list.primary
       end
     end
   end

@@ -58,8 +58,8 @@ describe Schools::OnBoarding::PhasesListsController, type: :request do
       end
 
       it 'redirects to the next step' do
-        expect(response).to redirect_to '????'
-        # list to pick key stages need a good name
+        expect(response).to redirect_to \
+          new_schools_on_boarding_primary_key_stages_path
       end
     end
   end
