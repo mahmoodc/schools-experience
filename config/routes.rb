@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         resource :other_fee, only: %i(new create)
         resource :phases_list, only: %i(new create)
         resource :key_stage_list, only: %i(new create)
+        resource :secondary_subjects_list, only: %i(new create)
       end
     end
   end

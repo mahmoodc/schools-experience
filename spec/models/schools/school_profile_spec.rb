@@ -79,6 +79,24 @@ describe Schools::SchoolProfile, type: :model do
       end
     end
 
+    context 'associations' do
+      # TODO change this to proper test
+      it 'spike' do
+        phase = FactoryBot.create :bookings_phase, name: 'Secondary'
+        sub = FactoryBot.create :bookings_subject
+        phase_2 = FactoryBot.create :bookings_phase, name: 'College'
+        sub_2 = FactoryBot.create :bookings_subject
+        profile = described_class.create! urn: 1234567890
+
+        ps1 = profile.phase_subjects.create! phase: phase, subject: sub
+        ps2 = profile.phase_subjects.create! phase: phase_2, subject: sub_2
+
+        #expect(profile.subjects.to_a).to eq [sub, sub_2]
+        #expect(profile.secondary_phase_subjects.to_a).to eq [ps1]
+        expect(profile.secondary_subjects.to_a).to eq [sub]
+      end
+    end
+
     context 'values from form models' do
       let :model do
         described_class.new urn: 1234567890

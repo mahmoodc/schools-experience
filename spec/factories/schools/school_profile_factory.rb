@@ -41,5 +41,11 @@ FactoryBot.define do
       phases_list_secondary { true }
       phases_list_college { true }
     end
+
+    trait :with_key_stage_list do
+      key_stage_list_early_years { true }
+      key_stage_list_key_stage_1 { true }
+      key_stage_list_key_stage_2 { true }
+    end
   end
 end

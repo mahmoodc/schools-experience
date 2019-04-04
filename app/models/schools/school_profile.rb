@@ -2,6 +2,27 @@ module Schools
   class SchoolProfile < ApplicationRecord
     validates :urn, presence: true, uniqueness: true
 
+    has_many :phase_subjects,
+      class_name: 'Schools::OnBoarding::PhaseSubject',
+      dependent: :destroy,
+      foreign_key: :schools_school_profile_id
+
+    has_many :subjects,
+      through: :phase_subjects,
+      class_name: 'Bookings::Subject'
+
+    has_many :phases, through: :phase_subjects, class_name: 'Bookings::Phase'
+
+    has_many :secondary_phase_subjects,
+      -> { secondary },
+      class_name: 'Schools::OnBoarding::PhaseSubject',
+      foreign_key: :schools_school_profile_id
+
+    has_many :secondary_subjects,
+      class_name: 'Bookings::Subject',
+      source: :subject,
+      through: :secondary_phase_subjects
+
     composed_of \
       :candidate_requirement,
       class_name: 'Schools::OnBoarding::CandidateRequirement',

@@ -25,6 +25,8 @@ module Schools
           :phases_list
         elsif key_stage_list_required?
           :key_stage_list
+        elsif secondary_subjects_required?
+          :secondary_subjects
         else
           raise 'Wizard incomplete' # NOTE: temp until wizard is finished
         end
@@ -60,6 +62,11 @@ module Schools
       def key_stage_list_required?
         @school_profile.phases_list.primary &&
           !@school_profile.key_stage_list.dup.valid?
+      end
+
+      def secondary_subjects_required?
+        @school_profile.phases_list.secondary &&
+          @school_profile.secondary_subjects.empty?
       end
     end
   end

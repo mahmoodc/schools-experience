@@ -105,6 +105,25 @@ describe Schools::OnBoarding::CurrentStep do
                 end
 
                 context 'key_stage_list not required' do
+                  context 'secondary_subjects required' do
+                    let :school_profile do
+                      FactoryBot.build_stubbed :school_profile,
+                        :with_candidate_requirement,
+                        :with_fees,
+                        :with_administration_fee,
+                        :with_dbs_fee,
+                        :with_other_fee,
+                        :with_phases,
+                        :with_key_stage_list
+                    end
+
+                    it 'returns secondary_subjects' do
+                      expect(returned_step).to eq :secondary_subjects
+                    end
+                  end
+
+                  context 'secondary_subjects not required' do
+                  end
                 end
               end
             end
