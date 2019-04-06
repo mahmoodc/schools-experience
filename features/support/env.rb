@@ -108,6 +108,7 @@ Capybara.register_driver :firefox_headless do |app|
 end
 
 Capybara.register_driver :ie do |app|
+  Capybara.default_max_wait_time = 5 # Seconds
   options = Selenium::WebDriver::IE::Options.new
   options.require_window_focus = true
   options.ignore_protected_mode_settings = true
