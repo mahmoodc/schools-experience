@@ -95,7 +95,8 @@ end
 
 Capybara.register_driver :firefox do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 120
+  client.read_timeout = 360
+  client.open_timeout = 360
 
   Capybara::Selenium::Driver.new(app, {browser: :firefox, http_client: client})
 
