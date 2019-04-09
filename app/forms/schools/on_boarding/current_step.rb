@@ -33,8 +33,8 @@ module Schools
           :specialism
         elsif candidate_experience_detail_required?
           :candidate_experience_detail
-        #elsif availability_required?
-        #  :availability
+        elsif availability_required?
+          :availability
         elsif experience_outline_required?
           :experience_outline
         elsif admin_contact_required?
