@@ -108,6 +108,10 @@ Capybara.register_driver :firefox_headless do |app|
   )
 end
 
+Capybara.register_driver :safari do |app|
+  Capybara::Selenium::Driver.new(app, browser: :safari)
+end
+
 Capybara.register_driver :ie do |app|
   options = Selenium::WebDriver::IE::Options.new
   options.require_window_focus = true
