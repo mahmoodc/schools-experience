@@ -78,7 +78,9 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    desired_capabilities: capabilities,
+    clear_local_storage: false, 
+    clear_session_storage: false
   )
 end
 
@@ -90,7 +92,9 @@ Capybara.register_driver :chrome_headless do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    desired_capabilities: capabilities,
+    clear_local_storage: false, 
+    clear_session_storage: false
   )
 end
 
