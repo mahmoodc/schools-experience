@@ -30,6 +30,7 @@ describe Candidates::Registrations::RegistrationAsPlacementRequest do
     "subject_first_choice" => "Maths",
     "subject_second_choice" => "Physics",
     "urn" => 11048,
+    "phase_number" => Rails.application.config.x.phase
   }.freeze
 
   context '#attributes' do

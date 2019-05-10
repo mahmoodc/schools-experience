@@ -54,7 +54,8 @@ describe Candidates::Registrations::RegistrationSession do
       ).to eq \
         'has_dbs_check' => true,
         'created_at' => date,
-        'updated_at' => date
+        'updated_at' => date,
+        'phase_number' => Rails.application.config.x.phase
     end
 
     it 'doesnt over write other keys' do

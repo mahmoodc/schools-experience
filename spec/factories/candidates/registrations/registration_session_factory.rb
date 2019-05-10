@@ -16,7 +16,8 @@ FactoryBot.define do
           "postcode"     => "TE57 1NG",
           "phone"        => "01234567890",
           "created_at"   => current_time,
-          "updated_at"   => current_time
+          "updated_at"   => current_time,
+          "phase_number" => Rails.application.config.x.phase
         }
       end
 
@@ -24,7 +25,8 @@ FactoryBot.define do
         {
           "has_dbs_check" => true,
           "created_at"    => current_time,
-          "updated_at"    => current_time
+          "updated_at"    => current_time,
+          "phase_number"  => Rails.application.config.x.phase
         }
       end
 
@@ -34,7 +36,8 @@ FactoryBot.define do
           "availability" => "Every third Tuesday",
           "objectives"   => "test the software",
           "created_at"   => current_time,
-          "updated_at"   => current_time
+          "updated_at"   => current_time,
+          "phase_number" => Rails.application.config.x.phase
         }
       end
 
@@ -48,7 +51,8 @@ FactoryBot.define do
           "subject_second_choice"     => "Physics",
           "urn"                       => urn,
           "created_at"                => current_time,
-          "updated_at"                => current_time
+          "updated_at"                => current_time,
+          "phase_number"              => Rails.application.config.x.phase
         }
       end
     end

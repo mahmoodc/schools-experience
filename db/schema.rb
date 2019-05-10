@@ -9,7 +9,8 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 2019_05_07_145858) do
+
+ActiveRecord::Schema.define(version: 2019_05_10_152003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +50,7 @@ ActiveRecord::Schema.define(version: 2019_05_07_145858) do
     t.datetime "updated_at", null: false
     t.text "availability"
     t.integer "bookings_placement_date_id"
+    t.integer "phase_number"
     t.index ["bookings_placement_date_id"], name: "index_bookings_placement_requests_on_bookings_placement_date_id"
   end
 

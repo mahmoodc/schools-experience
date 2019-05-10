@@ -6,6 +6,7 @@ module Candidates
 
       attribute :created_at, :datetime
       attribute :updated_at, :datetime
+      attribute :phase_number, :integer
 
       def persisted?
         created_at.present?
@@ -15,6 +16,9 @@ module Candidates
         validate!
         self.updated_at = DateTime.now
         self.created_at = self.updated_at unless persisted?
+        unless self.phase_number.present?
+          self.phase_number = Rails.application.config.x.phase
+        end
       end
 
       def ==(other)
