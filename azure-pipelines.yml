@@ -14,6 +14,9 @@ variables:
   CUCUMBER_PROFILE: continuous_integration
 
 steps:
+  - script: docker-compose version
+    displayName: display Docker Compose version
+
   - script: docker login $(dockerRegistry) -u $(dockerId) -p $pswd
     env:
       pswd: $(dockerPassword)
