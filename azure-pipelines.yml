@@ -20,7 +20,7 @@ steps:
       pswd: $(dockerPassword)
     displayName: 'Docker login'
   
-- script: docker pull $(dockerRegistry)/$(imageName):latest || true
+  - script: docker pull $(dockerRegistry)/$(imageName):latest || true
     displayName: Retrieve latest Docker build to use as cache
     condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'),ne(variables['Build.SourceBranch'], 'refs/heads/phase2'))
 
