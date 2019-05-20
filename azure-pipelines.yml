@@ -14,8 +14,8 @@ variables:
   CUCUMBER_PROFILE: continuous_integration
 
 steps:
-  - script: docker-compose up --help
-    displayName: display Docker Compose version
+  - script: docker-compose up
+    displayName: does it work as it does locally
 
   - script: docker login $(dockerRegistry) -u $(dockerId) -p $pswd
     env:
