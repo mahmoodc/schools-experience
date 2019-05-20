@@ -14,9 +14,6 @@ variables:
   CUCUMBER_PROFILE: continuous_integration
 
 steps:
-  - script: docker-compose up
-    displayName: does it work as it does locally
-
   - script: docker login $(dockerRegistry) -u $(dockerId) -p $pswd
     env:
       pswd: $(dockerPassword)
@@ -36,6 +33,9 @@ steps:
 
   - script: docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(imageName):latest
     displayName: Tag as latest
+
+  - script: docker-compose up
+    displayName: does it work as it does locally
 
   - script: docker-compose up -d postgres redis
     displayName: bring up postgres, redis and create database
