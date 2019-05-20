@@ -7,7 +7,8 @@ variables:
   POSTGRES_IMAGE: mdillon/postgis:11-alpine
   # define three more variables dockerId, dockerPassword and dockerRegistry in the build pipeline in UI
   POSTGRESS_PASSWORD: secret
-  DATABASE_URL: postgis://postgres:secret@postgres/school_experience
+  DATABASE_URL: postgis://postgres:secret@postgres/school_experience_test
+  WEB_URL: postgis://postgres:secret@postgres/school_experience
   SECRET_KEY_BASE: stubbed
   REDIS_IMAGE: redis:5-alpine
   REDIS_URL: redis://redis:6379/1
@@ -48,13 +49,10 @@ steps:
   - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true school-experience cucumber --profile=continuous_integration
     displayName: Run the Cucumber features
 
-  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience brakeman --no-pager
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL="$WEB_URL" -e RAILS_ENV=test school-experience brakeman --no-pager
     displayName: Run the Brakeman security scan
 
-  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e SECRET_KEY_BASE=stubbed school-experience rake db:create db:schema:load
-    displayName: Create Smoketest database and import schema
-
-  - script: docker-compose up -d school-experience
+  - script: docker-compose up -d 
     displayName: Spin up app
 
   - script: sleep 15 # ugly but gives the web app time to boot
@@ -63,7 +61,7 @@ steps:
   - script: docker ps | grep smoketest | grep '(healthy)' || false
     displayName: Check app reports as Healthy
 
-  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience govuk-lint-ruby app lib spec
+  - script: docker-compose run --rm -e DATABASE_URL-"$WEB_URL" -e REDIS_URL -e RAILS_ENV=test school-experience govuk-lint-ruby app lib spec
     displayName: Run the GovUK Lint check
 
   - script: docker-compose -d -f docker-compose-selenium.yml up
