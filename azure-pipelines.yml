@@ -32,7 +32,7 @@ steps:
     displayName: Build Docker Image without Cache
     condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2'))
 
-  - script: docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):latest
+  - script: docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(imageName):latest
     displayName: Tag as latest
 
   - script: docker-compose up -d postgres redis
