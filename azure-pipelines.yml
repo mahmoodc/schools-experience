@@ -37,7 +37,7 @@ steps:
   - script: docker-compose up -d postgres redis
     displayName: bring up postgres, redis and create database
 
-  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience rake db:create db:test:prepare
+  - script: docker-compose run --rm -e DATABASE_URL=$(DATABASE_URL) -e REDIS_URL=$(REDIS_URL) -e RAILS_ENV=test school-experience rake db:create db:test:prepare
     displayName: Create Testing databases, import schema and fixtures
 
   - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience rspec
