@@ -19,12 +19,8 @@ steps:
     env:
       pswd: $(dockerPassword)
     displayName: 'Docker login'
-  - script: docker run --name=postgres -e POSTGRES_PASSWORD -d $(POSTGRES_IMAGE)
-    displayName: Launch Postgres # done early to give it time to boot
-  - script: docker run --name=redis -d $(REDIS_IMAGE)
-    displayName: Launch Redis # done early to give it time to boot
-
-  - script: docker pull $(dockerRegistry)/$(imageName):latest || true
+  
+- script: docker pull $(dockerRegistry)/$(imageName):latest || true
     displayName: Retrieve latest Docker build to use as cache
     condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'),ne(variables['Build.SourceBranch'], 'refs/heads/phase2'))
 
@@ -36,35 +32,48 @@ steps:
     displayName: Build Docker Image without Cache
     condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2'))
 
-  - script: docker run --rm --link postgres:postgres -e DATABASE_URL --link redis:redis -e REDIS_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rake db:create db:test:prepare
+  - script: docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):latest
+    displayName: Tag as latest
+
+  - script: docker-compose up -d postgres redis
+    displayName: bring up postgres, redis and create database
+
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience rake db:create db:test:prepare
     displayName: Create Testing databases, import schema and fixtures
-  - script: docker run --rm --link postgres:postgres -e DATABASE_URL --link redis:redis -e REDIS_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rspec
+
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience rspec
     displayName: Run the Specs
-  - script: docker run --rm --link postgres:postgres -e DATABASE_URL --link redis:redis -e REDIS_URL -e RAILS_ENV=test -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e CUC_PAGE_DELAY=0 $(dockerRegistry)/$(imageName):$(imageTag) cucumber --profile=$(CUCUMBER_PROFILE)
+
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true school-experience cucumber --profile=continuous_integration
     displayName: Run the Cucumber features
-  - script: docker run --rm --link postgres:postgres -e DATABASE_URL --link redis:redis -e REDIS_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) brakeman --no-pager
+
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience brakeman --no-pager
     displayName: Run the Brakeman security scan
-  - script: docker run --rm --link postgres:postgres --link redis:redis -e DATABASE_URL="$WEB_URL" -e REDIS_URL -e SECRET_KEY_BASE=stubbed $(dockerRegistry)/$(imageName):$(imageTag) rake db:create db:schema:load
+
+  - script: docker-compose run --rm -e DATABASE_URL="$WEB_URL" -e REDIS_URL -e SECRET_KEY_BASE=stubbed school-experience rake db:create db:schema:load
     displayName: Create Smoketest database and import schema
-  - script: docker run -d --name=smoketest --health-interval=4s --link postgres:postgres --link redis:redis -e RAILS_ENV=servertest -e DATABASE_URL="$WEB_URL" -e REDIS_URL -e SECRET_KEY_BASE=stubbed -e SKIP_FORCE_SSL=true $(dockerRegistry)/$(imageName):$(imageTag)
+
+  - script: docker-compose up -d school-experience
     displayName: Spin up app
+
   - script: sleep 15 # ugly but gives the web app time to boot
     displayName: Pause to allow app to boot
+
   - script: docker ps | grep smoketest | grep '(healthy)' || false
     displayName: Check app reports as Healthy
-  - script: docker run --rm --link postgres:postgres --link redis:redis -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) govuk-lint-ruby app lib spec
+
+  - script: docker-compose run --rm -e DATABASE_URL -e REDIS_URL -e RAILS_ENV=test school-experience govuk-lint-ruby app lib spec
     displayName: Run the GovUK Lint check
 
-  - script: |
-      docker run --name=selenium-chrome -d --link smoketest:school-experience -v /dev/shm:/dev/shm selenium/standalone-chrome
-      docker run --rm --link postgres:postgres --link=redis:redis --link selenium-chrome:selenium --link smoketest:school-experience -e DATABASE_URL="$WEB_URL" -e REDIS_URL -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e CUC_PAGE_DELAY=0 -e APP_URL='http://school-experience:3000' $(dockerRegistry)/$(imageName):$(imageTag) cucumber
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2'))
+  - script: docker-compose -d -f docker-compose-selenium.yml up
+    displayName: spin up selenium nodes
+
+  - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' school-experience cucumber
+    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
     displayName: Run Cucumber via Selenium Chrome
 
-  - script: |
-      docker run --name=selenium-firefox -d --link smoketest:school-experience -v /dev/shm:/dev/shm selenium/standalone-firefox
-      docker run --rm --link postgres:postgres --link=redis:redis --link selenium-firefox:selenium --link smoketest:school-experience -e DATABASE_URL="$WEB_URL" -e REDIS_URL -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium -e CUC_DRIVER=firefox -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e CUC_PAGE_DELAY=0 -e APP_URL='http://school-experience:3000' $(dockerRegistry)/$(imageName):$(imageTag) cucumber
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2'))
+  - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' -e CUC_DRIVER=firefox school-experience cucumber
+    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
     displayName: Run Cucumber via Selenium Firefox
 
   - script: |
