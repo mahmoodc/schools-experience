@@ -61,7 +61,7 @@ steps:
   - script: docker-compose run --rm -e DATABASE_URL-"$WEB_URL" -e REDIS_URL -e RAILS_ENV=test school-experience govuk-lint-ruby app lib spec
     displayName: Run the GovUK Lint check
 
-  - script: docker-compose -d -f docker-compose-selenium.yml up
+  - script: docker-compose -f docker-compose-selenium.yml up -d
     displayName: spin up selenium nodes
 
   - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' school-experience cucumber
