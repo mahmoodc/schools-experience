@@ -68,7 +68,7 @@ steps:
     condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
     displayName: Run Cucumber via Selenium Chrome
 
-  - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' -e CUC_DRIVER=firefox school-experience cucumber
+  - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-firefox -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' -e CUC_DRIVER=firefox school-experience cucumber
     condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
     displayName: Run Cucumber via Selenium Firefox
 
