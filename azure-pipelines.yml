@@ -24,11 +24,11 @@ steps:
     displayName: Retrieve latest Docker build to use as cache
     condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
 
-  - script: docker build -f Dockerfile --cache-from=$(dockerRegistry)/$(imageName):latest -t $(dockerRegistry)/$(imageName):latest .
+  - script: docker build -f Dockerfile --cache-from=$(dockerRegistry)/$(imageName):latest -t $(imageName):latest .
     displayName: Build Docker Image using Cache
     condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
 
-  - script: docker build -f Dockerfile -t $(dockerRegistry)/$(imageName):latest .
+  - script: docker build -f Dockerfile -t $(imageName):latest .
     displayName: Build Docker Image without Cache
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
@@ -64,6 +64,7 @@ steps:
     displayName: Run Cucumber via Selenium Firefox
 
   - script: |
+      docker tag $(imageName):latest $(dockerRegistry)/$(imageName):latest
       docker push $(dockerRegistry)/$(imageName):latest
       docker tag $(dockerRegistry)/$(imageName):latest $(dockerRegistry)/$(imageName):$(imageTag)
       docker push $(dockerRegistry)/$(imageName):$(imageTag)
