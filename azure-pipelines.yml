@@ -22,18 +22,15 @@ steps:
   
   - script: docker pull $(dockerRegistry)/$(imageName):latest || true
     displayName: Retrieve latest Docker build to use as cache
-    condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'),ne(variables['Build.SourceBranch'], 'refs/heads/phase2'))
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
 
-  - script: docker build -f Dockerfile --cache-from=$(dockerRegistry)/$(imageName):latest -t $(dockerRegistry)/$(imageName):$(imageTag) .
+  - script: docker build -f Dockerfile --cache-from=$(dockerRegistry)/$(imageName):latest -t $(dockerRegistry)/$(imageName):latest .
     displayName: Build Docker Image using Cache
-    condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'),ne(variables['Build.SourceBranch'], 'refs/heads/phase2'))
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
 
-  - script: docker build -f Dockerfile -t $(dockerRegistry)/$(imageName):$(imageTag) .
+  - script: docker build -f Dockerfile -t $(dockerRegistry)/$(imageName):latest .
     displayName: Build Docker Image without Cache
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2'))
-
-  - script: docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(imageName):latest
-    displayName: Tag as latest
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - script: |
       docker-compose up -d
@@ -59,27 +56,19 @@ steps:
     displayName: spin up selenium nodes
 
   - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' school-experience cucumber
-    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
+    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master')))
     displayName: Run Cucumber via Selenium Chrome
 
   - script: docker-compose run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-firefox -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' -e CUC_DRIVER=firefox school-experience cucumber
-    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.SourceBranch'], 'refs/heads/phase2')))
+    condition: not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master')))
     displayName: Run Cucumber via Selenium Firefox
 
   - script: |
-      docker push $(dockerRegistry)/$(imageName):$(imageTag)
-      docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):latest
       docker push $(dockerRegistry)/$(imageName):latest
+      docker tag $(dockerRegistry)/$(imageName):latest $(dockerRegistry)/$(imageName):$(imageTag)
+      docker push $(dockerRegistry)/$(imageName):$(imageTag)
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     displayName: 'Push Docker image (built from master)'
-
-  - script: |
-      docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):$(imageTag)-phase2
-      docker push $(dockerRegistry)/$(imageName):$(imageTag)-phase2
-      docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):phase2
-      docker push $(dockerRegistry)/$(imageName):phase2
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/phase2')
-    displayName: 'Push Docker image (built from phase2)'
 
   - task: CopyFiles@2
     inputs:
