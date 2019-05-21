@@ -13,6 +13,7 @@ variables:
   REDIS_IMAGE: redis:5-alpine
   REDIS_URL: redis://redis:6379/1
   CUCUMBER_PROFILE: continuous_integration
+  APP_URL: http://school-experience:3000
 
 steps:
   - script: docker login $(dockerRegistry) -u $(dockerId) -p $pswd
@@ -55,11 +56,11 @@ steps:
   - script: docker-compose -f docker-compose.yml -f docker-compose-selenium.yml up -d
     displayName: spin up selenium nodes
 
-  - script: docker-compose -f docker-compose.yml -f docker-compose-selenium.yml run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' school-experience cucumber
+  - script: docker-compose -f docker-compose.yml -f docker-compose-selenium.yml run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-chrome -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL school-experience cucumber
     condition: not(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: Run Cucumber via Selenium Chrome
 
-  - script: docker-compose -f docker-compose.yml -f docker-compose-selenium.yml run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-firefox -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL='http://school-experience:3000' -e CUC_DRIVER=firefox school-experience cucumber
+  - script: docker-compose -f docker-compose.yml -f docker-compose-selenium.yml run --rm -e RAILS_ENV=test -e SELENIUM_HUB_HOSTNAME=selenium-firefox -e DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true -e APP_URL -e CUC_DRIVER=firefox school-experience cucumber
     condition: not(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     displayName: Run Cucumber via Selenium Firefox
 
